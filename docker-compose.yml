@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  web:
+    image: webapp-image:latest # Replace with the web app's Docker image
+    build:
+      context: ./web # Path to your web app Dockerfile
+    ports:
+      - "8080:8080" # Expose port 8080 (adjust as needed)
+    depends_on:
+      - db # Ensures the database starts before the web app
+    environment:
+      DB_HOST: devopsdb.cvqmgmc82gqa.ap-south-1.rds.amazonaws.com
+      DB_PORT: 3306
+      DB_USER: admin
+      DB_PASSWORD: 21JO1ScPZIRgU3ICVPfz
+      DB_NAME: devopsdb
+    volumes:
+      - ./web:/usr/src/app # Mounts local code directory to the container (optional)
+
+  db:
+    image: mysql:8.0 # Use the MySQL Docker image (replace with desired version)
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+    volumes:
+      - db-data:/var/lib/mysql # Persistent volume for database data
+
+volumes:
+  db-data:
+    driver: local
